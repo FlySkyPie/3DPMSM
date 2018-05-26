@@ -1,10 +1,10 @@
 3D Print Material Storage Manager
 ===
-introduction
+Introduction
 ---
-It a website tool to manage 3D print material of storage.
+It a website tool to manage 3D print material of storage,
 
-And base on Google App Script.
+and base on Google App Script.
 
 Why we make this?
 ---
@@ -16,10 +16,7 @@ But we don't have enough of people (students) can't handle so many of material, 
 
 Authors
 ---
-Script
-
-    - Wei Ji <c445dj544@gmail.com>
-    - 
-View
-
-    - 
+    - Script
+    		- Wei Ji <c445dj544@gmail.com>
+    - View
+        - 
