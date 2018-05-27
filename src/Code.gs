@@ -188,22 +188,26 @@ var ModelCrew = function(){
   
   /*
   * @todo Checking user is one of team members.
-  * @param String Gmail
   * @var HashArray
   */
-  this.checkIdentity = function( Gmail ){
+  this.getIdentity = function(){
+    var Gmail = Session.getActiveUser().getEmail();
+    var Member = {};
+    Member["Gmail"] = Gmail;
+    
     var data = this.getSheet();
     for (var i = 1; i < data.length; i++) 
     {
-      if( Gmail == data [i][1])
+      if( Gmail == data [i][4])
       {
-        var Member = {};
-        Member["Name"] = data [i][3];
-        Member["Gmail"] = data [i][4];
+        Member["Name" ] = data [i][3];
+        Member["Permission"] = 1;
         return Member;
       }
     }
-    return false;
+    Member["Name"] = "Guest";
+    Member["Permission"] = 0;
+    return Member;
   }
 };
 
@@ -237,9 +241,23 @@ var ModelClient = function(){
     return Package;
   }
   
-  this.addClient = function(){
+  /*
+   * @todo add a new client
+   * @param HashArray ClientInfo
+   */ 
+  this.addClient = function( ClientInfo ){
+    var Log = new ModelLog;
+    var data = [];
     
+    data.push( ClientInfo["Name"  ] );
+    data.push( ClientInfo["From"  ] );
+    data.push( ClientInfo["Phone" ] );
+    data.push( ClientInfo["Email" ] );
+    data.push( 0 );
     
+    this.addData( data );
+    var str = "Add a new client(" + ClientInfo["Name"] +").";
+    Log.add( str );
   }
 }
 
@@ -293,7 +311,23 @@ var ModelFilament = function(){
     var str= "Change status/weight of filament(" + Id + ").";
     Log.add( str );
   }
- 
+  
+  /*
+   * @todo get storage of filament
+   * @var Array
+   */ 
+  this.getStorage = function()
+  {
+    var Package = [];
+    var Data = this.getAll();
+    for( var index in Data)
+    {
+      var Filament = Data[index];
+      Filament["Id"] = index;
+      Package.push( Filament );
+    }
+    return Package;
+  }
 }
 
 /*
@@ -372,8 +406,12 @@ function doGet( e )
 function getFilament()
 {
   var Filament = new ModelFilament();
-  var data = Filament.getAll();
-  return JSON.stringify(data);
+  var Crew = new ModelCrew();
+  var Package = {};
+  Package["Filament"] = Filament.getStorage();
+  Package["User"] = Crew.getIdentity();
+
+  return JSON.stringify( Package );
 }
 
 
