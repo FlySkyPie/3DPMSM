@@ -215,6 +215,32 @@ var ModelClient = function(){
   ModelSheet.call(this);
   this.SheetId  = getSheetInfo( "Client", "ID" );
   this.SheetName = getSheetInfo( "Client", "Name" );
+  
+  /*
+   * @todo check client exit
+   * @param integer Id
+   * @var 
+   */ 
+  this.checkClient = function( Id ){
+    var Data = this.find( Id );
+    if( Data == -1 )
+      return -1;
+    
+    var Package = {
+        "Name":Data[3],
+        "From":Data[4],
+        "Phone":Data[5],
+        "Email":Data[6],
+        "Credit":Data[7]
+      };
+    
+    return Package;
+  }
+  
+  this.addClient = function(){
+    
+    
+  }
 }
 
 /*
@@ -259,11 +285,12 @@ var ModelFilament = function(){
    * @param Integer Id
    * @param String Status
    */ 
-  this.updateStatus = function( Id, Status ){
+  this.updateStatus = function( Id, Status, Weight ){
     var Log = new ModelLog();
     
-    this.editById(Id, 8, Status)
-    var str= "Change status of filament(" + Id + ").";
+    this.editById( Id, 8, Status )
+    this.editById( Id, 5, Weight )
+    var str= "Change status/weight of filament(" + Id + ").";
     Log.add( str );
   }
  
