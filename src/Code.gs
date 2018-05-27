@@ -197,6 +197,33 @@ var ModelFilament = function(){
   ModelSheet.call(this);
   this.SheetId  = getSheetInfo( "Filament", "ID" );
   this.SheetName = getSheetInfo( "Filament", "Name" );
+  
+  /*
+   * @todo add a filament to the storage
+   * @param Array Filaments
+   * @param String Operator
+   * @var Array
+   */ 
+  this.add = function( Filaments, Operator ){
+    var Log = new ModelLog();
+    var NumberOfFilaments = [];
+    for( Filament in Filaments)
+    {
+      //Filament should be HashArray, and had material, weight, color, diameter, status, note
+      var Package = [
+        Filament["material" ],
+        Filament["weight"   ],
+        Filament["color"    ],
+        Filament["diameter" ],
+        Filament["status"   ],
+        Filament["note"     ],
+        Operator
+      ];
+      this.addData( Package );
+      Log.add( Operator, "Add a filament of 3DP." );
+    }
+    return NumberOfFilaments;
+  }
 }
 
 /*
@@ -218,3 +245,27 @@ var ModelDepletion = function(){
   this.SheetId  = getSheetInfo( "Depletion", "ID" );
   this.SheetName = getSheetInfo( "Depletion", "Name" );
 }
+
+/*
+** @todo Model of Log
+*/
+var ModelLog = function(){
+  //Initialize Model
+  ModelSheet.call(this);
+  this.SheetId  = getSheetInfo( "Log", "ID" );
+  this.SheetName = getSheetInfo( "Log", "Name" );
+  
+  /*
+   * @todo add a log to database
+   * @param String User
+   * @param String Message
+   */
+  this.add = function( User, Message ){
+    var data = [ User, Message ];
+    this.addData( data );
+  }
+}
+
+/*
+ * Front-end stuff
+ */ 
