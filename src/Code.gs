@@ -146,6 +146,34 @@ var ModelSheet = function()
     }
     return -1;
   }
+  
+  /*
+   * @todo get whole data
+   * @var HashArray
+   */ 
+  this.getAll = function(){
+    var Sheet = this.getSheet();
+    var values = Sheet.getDataRange().getValues();
+    var Data = {};
+    var ColumnNames = [];
+    
+    //initial name of column 
+    for (var k = 0; k < values[0].length; k++) 
+      ColumnNames.push(values[0][k]);
+    
+    for (var i = 1; i < values.length; i++) 
+    {
+      var row = {};      
+      for (var j = 0; j < values[i].length; j++) 
+      {
+        row[ ColumnNames[j] ] = values[i][j];
+      }
+      
+      Data[i] = row;
+    }
+
+    return Data;
+  }
 }
 
 
@@ -206,7 +234,7 @@ var ModelFilament = function(){
    */ 
   this.add = function( Filaments, Operator ){
     var Log = new ModelLog();
-    var NumberOfFilaments = [];
+    var IdOfFilaments = [];
     for( Filament in Filaments)
     {
       //Filament should be HashArray, and had material, weight, color, diameter, status, note
@@ -219,11 +247,26 @@ var ModelFilament = function(){
         Filament["note"     ],
         Operator
       ];
-      this.addData( Package );
-      Log.add( Operator, "Add a filament of 3DP." );
+      var Id = this.addData( Package );
+      Log.add( "Add a filament of 3DP(" + Id + ")." );
+      IdOfFilaments.push( Id );
     }
-    return NumberOfFilaments;
+    return IdOfFilaments;
   }
+  
+  /*
+   * @todo update status of filament in the storage
+   * @param Integer Id
+   * @param String Status
+   */ 
+  this.updateStatus = function( Id, Status ){
+    var Log = new ModelLog();
+    
+    this.editById(Id, 8, Status)
+    var str= "Change status of filament(" + Id + ").";
+    Log.add( str );
+  }
+ 
 }
 
 /*
@@ -257,15 +300,96 @@ var ModelLog = function(){
   
   /*
    * @todo add a log to database
-   * @param String User
    * @param String Message
    */
-  this.add = function( User, Message ){
-    var data = [ User, Message ];
+  this.add = function( Message ){
+    var Gmail = Session.getActiveUser().getEmail();
+    var data = [ Gmail, Message ];
     this.addData( data );
   }
 }
 
-/*
+/**********************
  * Front-end stuff
+ **********************/ 
+ 
+/*
+** @todo website entry point
+*/
+function doGet( e ) 
+{
+  //test
+  var Filament = new ModelFilament();
+  var data = Filament.getAll();
+  return JSON.stringify(data);
+  
+  var Param = e.parameter;
+  if( Param["page"] == "storage" )
+  {
+    
+  }
+  else if( Param["page"] == "deposit" )
+  {
+
+  }
+  else if( Param["page"] == "depletion" )
+  {
+  }
+
+}
+
+/*
+ * @todo get filament storage
+ * @var Json
  */ 
+function getFilament()
+{
+  var Filament = new ModelFilament();
+  var data = Filament.getAll();
+  return JSON.stringify(data);
+}
+
+
+/*
+ * @todo modify status of filament
+ * @param HashArray Ask
+ */ 
+function setFilamentStatus( Ask )
+{
+  var Filament = new ModelFilament();
+  Filament.updateStatus( Ask["Id"], Ask["Status"] );
+  return 0;
+}
+
+/*
+ * @todo deposit filament
+ * @param HashArray Ask
+ * @var Json
+ */ 
+function depositFilament( Ask )
+{
+  //check client exist? if not then create one
+  
+}
+
+/*
+ * @todo check account exist and how mant credit he/she have
+ * @param HashArray Ask
+ * @var Json
+ */ 
+function checkAccount( Ask )
+{
+  
+  
+}
+
+/*
+ * @todo add a order of 3D print
+ * @param HashArray Ask
+ * @var Json
+ */ 
+function addOrder( Ask )
+{
+  
+  
+}
