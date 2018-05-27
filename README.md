@@ -17,6 +17,6 @@ But we don't have enough of people (students) can't handle so many of material, 
 Authors
 ---
     - Script
-    		- Wei Ji <c445dj544@gmail.com>
+        - Wei Ji <c445dj544@gmail.com>
     - View
         - Yu-Jie Huang <s95030145@gmail.com>
