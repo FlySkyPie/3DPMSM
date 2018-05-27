@@ -195,7 +195,8 @@ var ModelCrew = function(){
     var Member = {};
     Member["Gmail"] = Gmail;
     
-    var data = this.getSheet();
+    var data = this.getSheet().getDataRange().getValues();;
+    
     for (var i = 1; i < data.length; i++) 
     {
       if( Gmail == data [i][4])
@@ -205,6 +206,7 @@ var ModelCrew = function(){
         return Member;
       }
     }
+    
     Member["Name"] = "Guest";
     Member["Permission"] = 0;
     return Member;
@@ -379,15 +381,12 @@ var ModelLog = function(){
 */
 function doGet( e ) 
 {
-  //test
-  var Filament = new ModelFilament();
-  var data = Filament.getAll();
-  return JSON.stringify(data);
-  
   var Param = e.parameter;
   if( Param["page"] == "storage" )
   {
-    
+    return HtmlService
+      .createTemplateFromFile('Storage')
+      .evaluate();
   }
   else if( Param["page"] == "deposit" )
   {
@@ -401,7 +400,7 @@ function doGet( e )
 
 /*
  * @todo get filament storage
- * @var Json
+ * @var StringOfJson
  */ 
 function getFilament()
 {
@@ -457,4 +456,14 @@ function addOrder( Ask )
 {
   
   
+}
+
+/*
+ * @todo include file from GAS
+ * @param String Filename
+ */
+function include( Filename ) 
+{
+  return HtmlService.createHtmlOutputFromFile(Filename)
+      .getContent();
 }

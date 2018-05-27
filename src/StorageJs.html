@@ -1,10 +1,6 @@
 <script>
 // The code in this function runs when the page is loaded.
 $(function(){
-  
-  
-  
-  
   google.script.run.withSuccessHandler( LoadFinished )
       .getFilament();
 });
@@ -17,6 +13,7 @@ function LoadFinished ( PackageJson ) {
   
   Package = JSON.parse( PackageJson );
   
+  UpdateInfoOfUser( Package["User"] );
   LoadFilamentStorage( Package["Filament"] );
 
 }
@@ -25,13 +22,13 @@ function LoadFinished ( PackageJson ) {
  * @todo upload table of filament
  * @param HashArray Data
  */ 
-function LoadFilamentStorage( Data )
+function LoadFilamentStorage( Datas )
 {
-  
   var table = document.getElementById("FilamentTable");
   var RowCount = table.getElementsByTagName("tr").length;   //id of the row
-  for( var index in Data )
+  for( var index in Datas )
   {
+    var Data = Datas[index];
     var row = table.insertRow(-1);
     var Columns = [];
     for(var i=0;i<9;i++)
@@ -45,13 +42,23 @@ function LoadFilamentStorage( Data )
     Columns[4].innerHTML = Data["Diameter"];
     Columns[5].innerHTML = Data["Status"  ];
     Columns[6].innerHTML = Data["Note"    ];
-    Columns[7].innerHTML = Data["Operator"];
-    Columns[8].innerHTML = Data["Updated_at"];
+    Columns[7].innerHTML = Data["Updated_at"];
+    Columns[8].innerHTML = Data["Operator"];
   }
   
   document.getElementById('LoadingMsg').style.display = 'none';   //hide loading message
   document.getElementById('FilamentStorageBody').style.display = 'block';   //show filament
-  
+}
+
+/*
+ * @todo upload user information
+ * @param HashArray Data
+ */ 
+function UpdateInfoOfUser( Data )
+{
+  document.getElementById('UserRight').innerHTML   = Data["Permission"] ? "您有權限編輯" : "您沒有權限編輯";
+  document.getElementById('UserAccount').innerHTML = Data["Name"] + "(" + Data["Gmail"] + ")";
+  document.getElementById('UserRight').style.color = Data["Permission"] ? "lightgreen" : "red";
 }
 
 </script>
