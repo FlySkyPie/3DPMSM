@@ -21,13 +21,12 @@
   <div class="py-5">
     <div class="container">
       <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 border border-primary">
+        <div class="col-md-1"></div>
+        <div class="border border-primary col-md-10">
           <form class="py-2">
             <h3 class="" contenteditable="true">3DP以料換料存入</h3>
             <p class="">請值班人員依照下列填表內容協助欲進行以料換料的使用者填寫。
-              <br>
-            </p>
+              <br> </p>
             <p class="">提交這份表單時，系統會記錄你的電子郵件地址 (EX@gm.nfu.edu.tw)。如果這不是你的帳戶，請切換帳戶</p>
             <div class="form-group">
               <label>使用者</label>
@@ -46,11 +45,19 @@
               <p class="lead">EX@gm.nfu.edu.tw </p>
             </div>
             <div class="input-group my-1">
-              <input type="text" class="form-control w-25 form-control-sm mx-1" id="inlineFormInput" placeholder="材質">
-              <input type="text" class="form-control w-25 form-control-sm" placeholder="顏色" id="inlineFormInput">
-              <input type="number" class="form-control form-control-sm mx-1 w-25" placeholder="重量">
+              <input type="text" class="form-control form-control-sm mx-1" id="inlineFormInput" placeholder="材質">
+              <input type="text" class="form-control form-control-sm" placeholder="顏色" id="inlineFormInput">
+              <input type="number" class="form-control form-control-sm mx-1" placeholder="重量" id="inlineFormInput">
+              <input type="text" class="form-control form-control-sm" placeholder="線徑" id="inlineFormInput">
+              <select class="custom-select mx-1" id="inputGroupSelect01">
+                <option value="Choose..." selected="">狀態</option>
+                <option value="1">未拆封</option>
+                <option value="2">已拆封</option>
+                <option value="3">消耗完</option>
+              </select>
+              <input type="text" class="form-control form-control-sm" placeholder="備註">
               <div class="input-group-append">
-                <button class="btn btn-primary btn-sm" type="button">輸入</button>
+                <button class="btn btn-primary btn-sm mx-1" type="button">輸入</button>
               </div>
             </div>
             <table class="table">
@@ -60,6 +67,9 @@
                   <th>材質</th>
                   <th>顏色</th>
                   <th>重量(g)</th>
+                  <th>線徑</th>
+                  <th>狀態</th>
+                  <th>備註</th>
                 </tr>
               </thead>
               <tbody>
@@ -68,25 +78,30 @@
                   <td>PLA</td>
                   <td>白色</td>
                   <td>1000</td>
+                  <td>1.75</td>
+                  <td>未開封</td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>2</td>
                   <td>PLA</td>
                   <td>白色</td>
                   <td>1000</td>
+                  <td>1.75</td>
+                  <td>未開封</td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>3</td>
                   <td>PLA</td>
                   <td>白色</td>
                   <td>1000</td>
+                  <td>1.75</td>
+                  <td>未開封</td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
-            <div class="form-group">
-              <label for="exampleInputEmail1">備註</label>
-              <input type="text" class="form-control" id="inlineFormInput" placeholder="須注意事項">
-            </div>
             <div class="form-group">
               <label for="exampleInputEmail1">填表人</label>
               <p class="lead">工讀名稱</p>
@@ -94,7 +109,7 @@
           </form>
           <button type="submit" class="btn btn-primary my-2">存入</button>
         </div>
-        <div class="col-md-3"></div>
+        <div class="col-md-1"></div>
       </div>
     </div>
   </div>
