@@ -147,3 +147,74 @@ var ModelSheet = function()
     return -1;
   }
 }
+
+
+/*
+** @todo Model of Crew
+*/
+var ModelCrew = function(){
+  //Initialize Model
+  ModelSheet.call(this);
+  this.SheetId  = getSheetInfo( "Crew", "ID" );
+  this.SheetName = getSheetInfo( "Crew", "Name" );
+  
+  /*
+  * @todo Checking user is one of team members.
+  * @param String Gmail
+  * @var HashArray
+  */
+  this.checkIdentity = function( Gmail ){
+    var data = this.getSheet();
+    for (var i = 1; i < data.length; i++) 
+    {
+      if( Gmail == data [i][1])
+      {
+        var Member = {};
+        Member["Name"] = data [i][3];
+        Member["Gmail"] = data [i][4];
+        return Member;
+      }
+    }
+    return false;
+  }
+};
+
+/*
+** @todo Model of Client
+*/
+var ModelClient = function(){
+  //Initialize Model
+  ModelSheet.call(this);
+  this.SheetId  = getSheetInfo( "Client", "ID" );
+  this.SheetName = getSheetInfo( "Client", "Name" );
+}
+
+/*
+** @todo Model of Filament
+*/
+var ModelFilament = function(){
+  //Initialize Model
+  ModelSheet.call(this);
+  this.SheetId  = getSheetInfo( "Filament", "ID" );
+  this.SheetName = getSheetInfo( "Filament", "Name" );
+}
+
+/*
+** @todo Model of Deposit
+*/
+var ModelDeposit = function(){
+  //Initialize Model
+  ModelSheet.call(this);
+  this.SheetId  = getSheetInfo( "Deposit", "ID" );
+  this.SheetName = getSheetInfo( "Deposit", "Name" );
+}
+
+/*
+** @todo Model of Depletion
+*/
+var ModelDepletion = function(){
+  //Initialize Model
+  ModelSheet.call(this);
+  this.SheetId  = getSheetInfo( "Depletion", "ID" );
+  this.SheetName = getSheetInfo( "Depletion", "Name" );
+}
