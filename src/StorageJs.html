@@ -44,6 +44,13 @@ function LoadFilamentStorage( Datas )
     Columns[6].innerHTML = Data["Note"    ];
     Columns[7].innerHTML = Data["Updated_at"];
     Columns[8].innerHTML = Data["Operator"];
+    
+    //add selection to select
+    var x = document.getElementById("IdSelect");
+    var option = document.createElement("option");
+    option.text = Data["Id"].padStart(6, "0");
+    option.value = Data["Id"];
+    x.add(option);
   }
   
   document.getElementById('LoadingMsg').style.display = 'none';   //hide loading message
@@ -59,6 +66,59 @@ function UpdateInfoOfUser( Data )
   document.getElementById('UserRight').innerHTML   = Data["Permission"] ? "您有權限編輯" : "您沒有權限編輯";
   document.getElementById('UserAccount').innerHTML = Data["Name"] + "(" + Data["Gmail"] + ")";
   document.getElementById('UserRight').style.color = Data["Permission"] ? "lightgreen" : "red";
+}
+
+
+/*
+ * @todo update status of filament to empty
+ * @param Integer Id
+ */ 
+function reportFilamentDeplete( Id )
+{
+  var str = "確定要將編號 " + Id + " 的耗材標記為「已耗盡」？"
+  if (!confirm( str )) 
+    return;
+    
+  google.script.run.withSuccessHandler( showMessage )
+      .setFilamentEmpty( Id );
+}
+
+/*
+ * @todo update status of filament to unpacking
+ * @param Integer Id
+ */ 
+function reportFilamentUnpacking( Id )
+{
+  var str = "確定要將編號 " + Id + " 的耗材標記為「已開封」？"
+  if (!confirm( str )) 
+    return;
+    
+  google.script.run.withSuccessHandler( showMessage )
+      .setFilamentuUnpacking( Id );
+}
+
+/*
+ * @todo update the filament of weight
+ * @param Integer Id
+ */ 
+function updateWeight( Id )
+{
+  var str = "您已選定編號 " +  Id + " 的線材，\n請輸入要更新的重量 (g):";
+  var answer = prompt(str, "1000");
+  if (person == null || peson == "")
+    return;
+
+  google.script.run.withSuccessHandler( showMessage )
+      .getFilament();
+}
+
+/*
+ * @todo show message on page
+ * @param String Str
+ */ 
+function showMessage(  Str )
+{
+  alert(Str);
 }
 
 </script>

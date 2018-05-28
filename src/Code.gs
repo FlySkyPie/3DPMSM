@@ -305,12 +305,25 @@ var ModelFilament = function(){
    * @param Integer Id
    * @param String Status
    */ 
-  this.updateStatus = function( Id, Status, Weight ){
+  this.updateStatus = function( Id, Status ){
     var Log = new ModelLog();
     
     this.editById( Id, 8, Status )
+
+    var str= "Change status of filament(" + Id + ").";
+    Log.add( str );
+  }
+  
+  /*
+   * @todo update weight of filament in the storage
+   * @param Integer Id
+   * @param Integer Weight
+   */ 
+  this.uploadWeight = function( Idm Weight){
+    var Log = new ModelLog();
     this.editById( Id, 5, Weight )
-    var str= "Change status/weight of filament(" + Id + ").";
+    
+    var str= "Change weight of filament(" + Id + ").";
     Log.add( str );
   }
   
@@ -372,9 +385,9 @@ var ModelLog = function(){
   }
 }
 
-/**********************
- * Front-end stuff
- **********************/ 
+/**********************************************
+ *             Front-end stuff
+ **********************************************/ 
  
 /*
 ** @todo website entry point
@@ -398,6 +411,9 @@ function doGet( e )
 
 }
 
+/*==========================================
+ *               Storage Page
+ *==========================================*/ 
 /*
  * @todo get filament storage
  * @var StringOfJson
@@ -412,19 +428,41 @@ function getFilament()
 
   return JSON.stringify( Package );
 }
-
-
 /*
- * @todo modify status of filament
- * @param HashArray Ask
+ * @todo modify status of filament to empty
+ * @param Integer Id
  */ 
-function setFilamentStatus( Ask )
+function setFilamentEmpty( Id )
 {
   var Filament = new ModelFilament();
-  Filament.updateStatus( Ask["Id"], Ask["Status"] );
-  return 0;
+  Filament.updateStatus( Id, "已耗盡" );
+  return "已經將線材 " + Id + " 號標記為「已耗盡」。";
+}
+ 
+/*
+ * @todo modify status of filament to unpacking
+ * @param Integer Id
+ */ 
+function setFilamentuUnpacking( Id )
+{
+  var Filament = new ModelFilament();
+  Filament.updateStatus( Id, "已開封" );
+  return "已經將線材 " + Id + " 號標記為「已開封」。";
 }
 
+/*
+ * @todo modify weight of the filament
+ */ 
+function setFilamentWeight( Id, Weight )
+{
+  var Filament = new ModelFilament();
+  Filament.updateWeight( Id, Weight );
+  return "已經將線材 " + Id + " 號的重量更新為 " + Weight + " g。";
+}
+
+/*==========================================
+ *              Deposit page
+ *==========================================*/ 
 /*
  * @todo deposit filament
  * @param HashArray Ask
@@ -435,6 +473,9 @@ function depositFilament( Ask )
   //check client exist? if not then create one
   
 }
+
+
+
 
 /*
  * @todo check account exist and how mant credit he/she have
