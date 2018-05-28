@@ -188,22 +188,28 @@ var ModelCrew = function(){
   
   /*
   * @todo Checking user is one of team members.
-  * @param String Gmail
   * @var HashArray
   */
-  this.checkIdentity = function( Gmail ){
-    var data = this.getSheet();
+  this.getIdentity = function(){
+    var Gmail = Session.getActiveUser().getEmail();
+    var Member = {};
+    Member["Gmail"] = Gmail;
+    
+    var data = this.getSheet().getDataRange().getValues();;
+    
     for (var i = 1; i < data.length; i++) 
     {
-      if( Gmail == data [i][1])
+      if( Gmail == data [i][4])
       {
-        var Member = {};
-        Member["Name"] = data [i][3];
-        Member["Gmail"] = data [i][4];
+        Member["Name" ] = data [i][3];
+        Member["Permission"] = 1;
         return Member;
       }
     }
-    return false;
+    
+    Member["Name"] = "Guest";
+    Member["Permission"] = 0;
+    return Member;
   }
 };
 
@@ -215,6 +221,46 @@ var ModelClient = function(){
   ModelSheet.call(this);
   this.SheetId  = getSheetInfo( "Client", "ID" );
   this.SheetName = getSheetInfo( "Client", "Name" );
+  
+  /*
+   * @todo check client exit
+   * @param integer Id
+   * @var 
+   */ 
+  this.checkClient = function( Id ){
+    var Data = this.find( Id );
+    if( Data == -1 )
+      return -1;
+    
+    var Package = {
+        "Name":Data[3],
+        "From":Data[4],
+        "Phone":Data[5],
+        "Email":Data[6],
+        "Credit":Data[7]
+      };
+    
+    return Package;
+  }
+  
+  /*
+   * @todo add a new client
+   * @param HashArray ClientInfo
+   */ 
+  this.addClient = function( ClientInfo ){
+    var Log = new ModelLog;
+    var data = [];
+    
+    data.push( ClientInfo["Name"  ] );
+    data.push( ClientInfo["From"  ] );
+    data.push( ClientInfo["Phone" ] );
+    data.push( ClientInfo["Email" ] );
+    data.push( 0 );
+    
+    this.addData( data );
+    var str = "Add a new client(" + ClientInfo["Name"] +").";
+    Log.add( str );
+  }
 }
 
 /*
@@ -259,14 +305,31 @@ var ModelFilament = function(){
    * @param Integer Id
    * @param String Status
    */ 
-  this.updateStatus = function( Id, Status ){
+  this.updateStatus = function( Id, Status, Weight ){
     var Log = new ModelLog();
     
-    this.editById(Id, 8, Status)
-    var str= "Change status of filament(" + Id + ").";
+    this.editById( Id, 8, Status )
+    this.editById( Id, 5, Weight )
+    var str= "Change status/weight of filament(" + Id + ").";
     Log.add( str );
   }
- 
+  
+  /*
+   * @todo get storage of filament
+   * @var Array
+   */ 
+  this.getStorage = function()
+  {
+    var Package = [];
+    var Data = this.getAll();
+    for( var index in Data)
+    {
+      var Filament = Data[index];
+      Filament["Id"] = index;
+      Package.push( Filament );
+    }
+    return Package;
+  }
 }
 
 /*
@@ -318,15 +381,12 @@ var ModelLog = function(){
 */
 function doGet( e ) 
 {
-  //test
-  var Filament = new ModelFilament();
-  var data = Filament.getAll();
-  return JSON.stringify(data);
-  
   var Param = e.parameter;
   if( Param["page"] == "storage" )
   {
-    
+    return HtmlService
+      .createTemplateFromFile('Storage')
+      .evaluate();
   }
   else if( Param["page"] == "deposit" )
   {
@@ -340,13 +400,17 @@ function doGet( e )
 
 /*
  * @todo get filament storage
- * @var Json
+ * @var StringOfJson
  */ 
 function getFilament()
 {
   var Filament = new ModelFilament();
-  var data = Filament.getAll();
-  return JSON.stringify(data);
+  var Crew = new ModelCrew();
+  var Package = {};
+  Package["Filament"] = Filament.getStorage();
+  Package["User"] = Crew.getIdentity();
+
+  return JSON.stringify( Package );
 }
 
 
@@ -392,4 +456,14 @@ function addOrder( Ask )
 {
   
   
+}
+
+/*
+ * @todo include file from GAS
+ * @param String Filename
+ */
+function include( Filename ) 
+{
+  return HtmlService.createHtmlOutputFromFile(Filename)
+      .getContent();
 }

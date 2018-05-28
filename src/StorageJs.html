@@ -1,0 +1,64 @@
+<script>
+// The code in this function runs when the page is loaded.
+$(function(){
+  google.script.run.withSuccessHandler( LoadFinished )
+      .getFilament();
+});
+  
+/*
+ * @todo there are a package from the database of google sheet, upload it to html!
+ * @param String PackageJson
+*/
+function LoadFinished ( PackageJson ) {
+  
+  Package = JSON.parse( PackageJson );
+  
+  UpdateInfoOfUser( Package["User"] );
+  LoadFilamentStorage( Package["Filament"] );
+
+}
+
+/*
+ * @todo upload table of filament
+ * @param HashArray Data
+ */ 
+function LoadFilamentStorage( Datas )
+{
+  var table = document.getElementById("FilamentTable");
+  var RowCount = table.getElementsByTagName("tr").length;   //id of the row
+  for( var index in Datas )
+  {
+    var Data = Datas[index];
+    var row = table.insertRow(-1);
+    var Columns = [];
+    for(var i=0;i<9;i++)
+    {
+      Columns.push( row.insertCell( i ) );
+    }
+    Columns[0].innerHTML = Data["Id"];
+    Columns[1].innerHTML = Data["Material"];
+    Columns[2].innerHTML = Data["Weight"  ];
+    Columns[3].innerHTML = Data["Color"   ];
+    Columns[4].innerHTML = Data["Diameter"];
+    Columns[5].innerHTML = Data["Status"  ];
+    Columns[6].innerHTML = Data["Note"    ];
+    Columns[7].innerHTML = Data["Updated_at"];
+    Columns[8].innerHTML = Data["Operator"];
+  }
+  
+  document.getElementById('LoadingMsg').style.display = 'none';   //hide loading message
+  document.getElementById('FilamentStorageBody').style.display = 'block';   //show filament
+}
+
+/*
+ * @todo upload user information
+ * @param HashArray Data
+ */ 
+function UpdateInfoOfUser( Data )
+{
+  document.getElementById('UserRight').innerHTML   = Data["Permission"] ? "您有權限編輯" : "您沒有權限編輯";
+  document.getElementById('UserAccount').innerHTML = Data["Name"] + "(" + Data["Gmail"] + ")";
+  document.getElementById('UserRight').style.color = Data["Permission"] ? "lightgreen" : "red";
+}
+
+</script>
