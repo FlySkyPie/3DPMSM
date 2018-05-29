@@ -31,7 +31,7 @@ function LoadFilamentStorage( Datas )
     var Data = Datas[index];
     var row = table.insertRow(-1);
     var Columns = [];
-    for(var i=0;i<10;i++)
+    for(var i=0;i<9;i++)
     {
       Columns.push( row.insertCell( i ) );
     }
@@ -42,33 +42,8 @@ function LoadFilamentStorage( Datas )
     Columns[4].innerHTML = Data["Diameter"];
     Columns[5].innerHTML = Data["Status"  ];
     Columns[6].innerHTML = Data["Note"    ];
-    
-    var date = new Date( Data["Updated_at"] );
-    var str = date.getFullYear() + "-" +
-    
-    
-    Columns[7].innerHTML = ;
+    Columns[7].innerHTML = Data["Updated_at"];
     Columns[8].innerHTML = Data["Operator"];
-    
-    //create operate button panel
-    var imgURL = [
-      "hlbLPTk.png",
-      "pCtBBKB.png",
-      "JckXMOy.png",
-    ];
-    
-    var row = document.createElement("DIV");
-    row.className = "row";
-    
-    for(var index in imgURL)
-    {
-      var col = document.createElement("DIV");
-      col.className = 'col-md-4';
-      col.innerHTML = '<img class="d-block" src="https://i.imgur.com/' + imgURL[index] + '" width="50" height="50">';
-      row.appendChild( col );
-    }
-
-    Columns[9].appendChild( row );
     
     //add selection to select
     var x = document.getElementById("IdSelect");
@@ -82,6 +57,7 @@ function LoadFilamentStorage( Datas )
   document.getElementById('FilamentStorageBody').style.display = 'block';   //show filament
 }
 
+
 /*
  * @todo upload user information
  * @param HashArray Data
@@ -92,58 +68,4 @@ function UpdateInfoOfUser( Data )
   document.getElementById('UserAccount').innerHTML = Data["Name"] + "(" + Data["Gmail"] + ")";
   document.getElementById('UserRight').style.color = Data["Permission"] ? "lightgreen" : "red";
 }
-
-
-/*
- * @todo update status of filament to empty
- * @param Integer Id
- */ 
-function reportFilamentDeplete( Id )
-{
-  var str = "確定要將編號 " + Id + " 的耗材標記為「已耗盡」？"
-  if (!confirm( str )) 
-    return;
-    
-  google.script.run.withSuccessHandler( showMessage )
-      .setFilamentEmpty( Id );
-}
-
-/*
- * @todo update status of filament to unpacking
- * @param Integer Id
- */ 
-function reportFilamentUnpacking( Id )
-{
-  var str = "確定要將編號 " + Id + " 的耗材標記為「已開封」？"
-  if (!confirm( str )) 
-    return;
-    
-  google.script.run.withSuccessHandler( showMessage )
-      .setFilamentuUnpacking( Id );
-}
-
-/*
- * @todo update the filament of weight
- * @param Integer Id
- */ 
-function updateWeight( Id )
-{
-  var str = "您已選定編號 " +  Id + " 的線材，\n請輸入要更新的重量 (g):";
-  var answer = prompt(str, "1000");
-  if (person == null || peson == "")
-    return;
-
-  google.script.run.withSuccessHandler( showMessage )
-      .getFilament();
-}
-
-/*
- * @todo show message on page
- * @param String Str
- */ 
-function showMessage(  Str )
-{
-  alert(Str);
-}
-
 </script>
