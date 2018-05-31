@@ -6,7 +6,6 @@ var ModelSheet = function()
 {
   this.SheetId = "";
   this.SheetName = "";
-  this.ColumnName = ["Id","Created_at","Updated_at"];
   
   /*
   * @todo get sheet
@@ -130,56 +129,77 @@ var ModelSheet = function()
   
   /*
    * @todo search rows by value from certain column
-   * @param Integer Column
+   * @param String Column
    * @param String Value
+   * @var Array
    */
   this.searchByColumn = function( Column, Value )
   {
-    var Sheet = this.getSheet();
-    var values = Sheet.getDataRange().getValues();
+    var Values  = this.getValues();
+    var ColumnNames = [];         //name of columns
+    var Rows = [];                //the data of prepare to return
     
-    var Rows = [];
-    
-    for (var row in values)
-    {
-      if( values[row][Column-1] == Value ) //make sure id is in the first column in your sheet
-      {
-        Rows.push( values[row] );
-      }
-    }
-    if( Rows.lenght == 0 )
+    //initial name of column 
+    for each ( var col in Values[0] )
+      ColumnNames.push( col );
+      
+    if( !ColumnNames.includes( Column ) ) //there are not column named this
       return -1;
-    else
-      return Rows;
     
+    var ColumnIndex = ColumnNames.indexOf( Column );  //get columnof index which user want to search
+    for each( var Row in Values )
+    {
+      if( Row[ColumnIndex] != Value ) //not match, next one~
+        continue;
+        
+      //make a HashArray of row
+      var RowData = {};
+      for ( var j in Row )
+        RowData[ ColumnNames[j] ] = Row[j];
+        
+      Rows.push( RowData );
+    }
+    
+    if( Rows.lenght == 0 )        //there are no data match, return -1
+      return -1;
+    return Rows;
   }
   
   /*
    * @todo edit a cell that search by id and column
    * @param Integer Id
-   * @param Integer Column
+   * @param String Column
    * @param String Value
    */
   this.editById = function ( Id, Column, Value )
   {
     var Sheet = this.getSheet();
-    var values = Sheet.getDataRange().getValues();
+    var Values  = this.getValues();
+    var ColumnNames = [];         //name of columns
     
-    for (var row in values)
-    {
-      if( values[row][0] == _Id ) //make sure id is in the first column in your sheet
+    //initial name of column 
+    for each ( var col in Values[0] )
+      ColumnNames.push( col );
+      
+    if( !ColumnNames.includes( Column ) ) //there are not column named this
+      return -1;
+    
+    var ColumnIndex = ColumnNames.indexOf( Column );  //get columnof index which user want to edit
+    
+    for ( var RowIndex in Values )
+      if( Values[RowIndex][0] == Id )
       {
-        var cell = sheet.getRange( row+1, Column );
-        cell.setValue( Value );
+        var TheCell = Sheet.getRange( RowIndex +1 , ColumnIndex +1 );
+        TheCell.setValue( Value );
         
         //update 
-        var UpdateCell = sheet.getRange( row+1, 3 );
+        var UpdateCell = Sheet.getRange( RowIndex +1, 3 );
         var CurrentDate = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm:ss");   //Generate Date
         UpdateCell.setValue( CurrentDate );
         
         return 1;
       }
-    }
+    
     return -1;
   }
   
@@ -190,7 +210,7 @@ var ModelSheet = function()
   this.getAll = function(){
     var Sheet = this.getSheet();
     var values = Sheet.getDataRange().getValues();
-    var Data = {};
+    var Data = [];
     var ColumnNames = [];
     
     //initial name of column 
@@ -205,8 +225,11 @@ var ModelSheet = function()
         row[ ColumnNames[j] ] = values[i][j];
       }
       
-      Data[i] = row;
+      Data.push( row );
     }
+    
+    if( Data.lenght == 0 )        //there are no data match, return -1
+      return -1;
 
     return Data;
   }
