@@ -333,24 +333,25 @@ var ModelFilament = function(){
   /*
    * @todo add a filament to the storage
    * @param Array Filaments
-   * @param String Operator
    * @var Array
    */ 
-  this.add = function( Filaments, Operator ){
+  this.add = function( Filaments ){
+    var Gmail = Session.getActiveUser().getEmail();
     var Log = new ModelLog();
     var IdOfFilaments = [];
-    for( Filament in Filaments)
+    for each( Filament in Filaments)
     {
       //Filament should be HashArray, and had material, weight, color, diameter, status, note
-      var Package = [
-        Filament["material" ],
-        Filament["weight"   ],
-        Filament["color"    ],
-        Filament["diameter" ],
-        Filament["status"   ],
-        Filament["note"     ],
-        Operator
-      ];
+      var Package = {};
+      
+      Package["material"]   = Filament["material" ];
+      Package["weight"]     = Filament["weight"];
+      Package["color"]    = Filament["color"];
+      Package["diameter"] = Filament["diameter"];
+      Package["status"]   = Filament["status"];
+      Package["note"]     = Filament["note"];
+      Package["operator"] = Gmail;
+      
       var Id = this.addData( Package );
       Log.add( "Add a filament of 3DP(" + Id + ")." );
       IdOfFilaments.push( Id );
@@ -365,8 +366,10 @@ var ModelFilament = function(){
    */ 
   this.updateStatus = function( Id, Status ){
     var Log = new ModelLog();
+    var Gmail = Session.getActiveUser().getEmail();
     
-    this.editById( Id, 8, Status )
+    this.editById( Id, "status", Status );
+    this.editById( Id, "operator", Gmail );
 
     var str= "Change status of filament(" + Id + ").";
     Log.add( str );
@@ -379,7 +382,10 @@ var ModelFilament = function(){
    */ 
   this.uploadWeight = function( Idm Weight){
     var Log = new ModelLog();
-    this.editById( Id, 5, Weight )
+    var Gmail = Session.getActiveUser().getEmail();
+    
+    this.editById( Id, "weight", Weight )
+    this.editById( Id, "operator", Gmail );
     
     var str= "Change weight of filament(" + Id + ").";
     Log.add( str );
@@ -393,13 +399,8 @@ var ModelFilament = function(){
   {
     var Package = [];
     var Data = this.getAll();
-    for( var index in Data)
-    {
-      var Filament = Data[index];
-      Filament["Id"] = index;
-      Package.push( Filament );
-    }
-    return Package;
+
+    return Data;
   }
 }
 
