@@ -283,20 +283,20 @@ var ModelClient = function(){
   /*
    * @todo check client exit
    * @param integer Id
-   * @var 
+   * @var HashArray
    */ 
   this.checkClient = function( Id ){
     var Data = this.find( Id );
     if( Data == -1 )
       return -1;
     
-    var Package = {
-        "Name":Data[3],
-        "From":Data[4],
-        "Phone":Data[5],
-        "Email":Data[6],
-        "Credit":Data[7]
-      };
+    var Package = {};
+    
+    Package["Name"] = Data["name"];
+    Package["From"] = Data["from"];
+    Package["Phone"] = Data["phone"];
+    Package["Email"] = Data["email"];
+    Package["Credit"] = Data["credit"];
     
     return Package;
   }
@@ -307,13 +307,13 @@ var ModelClient = function(){
    */ 
   this.addClient = function( ClientInfo ){
     var Log = new ModelLog;
-    var data = [];
+    var Data = {};
     
-    data.push( ClientInfo["Name"  ] );
-    data.push( ClientInfo["From"  ] );
-    data.push( ClientInfo["Phone" ] );
-    data.push( ClientInfo["Email" ] );
-    data.push( 0 );
+    Data["name"]    = ClientInfo["Name"];
+    Data["from"]    = ClientInfo["From"];
+    Data["phone"]   = ClientInfo["Phone"];
+    Data["email"]   = ClientInfo["Email"];
+    Data["credit"]  = 0;
     
     this.addData( data );
     var str = "Add a new client(" + ClientInfo["Name"] +").";
