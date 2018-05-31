@@ -251,24 +251,23 @@ var ModelCrew = function(){
   */
   this.getIdentity = function(){
     var Gmail = Session.getActiveUser().getEmail();
-    var Member = {};
-    Member["Gmail"] = Gmail;
+    var Person = {};          //the HashArray which will be return
+    Person["Gmail"] = Gmail;
     
-    var data = this.getSheet().getDataRange().getValues();;
+    var Data = this.getAll();
     
-    for (var i = 1; i < data.length; i++) 
+    for each( Row in Data)
     {
-      if( Gmail == data [i][4])
+      if( Gmail == Row["gmail"] )
       {
-        Member["Name" ] = data [i][3];
-        Member["Permission"] = 1;
-        return Member;
+        Person["Name"] = Row["gmail"];
+        Person["Permission"] = 1;
+        return Person;
       }
     }
-    
-    Member["Name"] = "Guest";
-    Member["Permission"] = 0;
-    return Member;
+    Person["Name"] = "Guest";
+    Person["Permission"] = 0;
+    return Person;
   }
 };
 
